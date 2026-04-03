@@ -1,5 +1,7 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework import status
+from django.conf import settings
 from .models import Note
 from .serializers import NoteSerializer
 
@@ -14,7 +16,17 @@ def notes_list(request):
         serializer = NoteSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET'])
+def about(request):
+    return Response({
+        'ho_ten_sinh_vien': settings.STUDENT_NAME,
+        'ma_so_sinh_vien': settings.STUDENT_ID,
+        'lop': settings.STUDENT_CLASS,
+    })
 
 @api_view(['GET'])
 def health(request):
