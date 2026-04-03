@@ -23,6 +23,11 @@ function NotesPage({ apiBaseUrl, appName }) {
     fetchNotes();
   };
 
+  const deleteNote = async (id) => {
+    await axios.delete(`${apiBaseUrl}/api/notes/${id}/`);
+    setNotes((prevNotes) => prevNotes.filter((note) => note.id !== id));
+  };
+
   useEffect(() => {
     fetchNotes();
   }, [apiBaseUrl]);
@@ -48,6 +53,9 @@ function NotesPage({ apiBaseUrl, appName }) {
           <article className="noteItem" key={n.id}>
             <h3>{n.title}</h3>
             <p>{n.content}</p>
+            <button className="deleteBtn" onClick={() => deleteNote(n.id)}>
+              Delete
+            </button>
           </article>
         ))}
       </div>
